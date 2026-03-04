@@ -2,6 +2,7 @@
   "name": "Taskify",
   "short_name": "Taskify",
   "description": "Simple task management app",
+  "id": "/",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
@@ -9,12 +10,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/images/icon.png",
+      "src": "/images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/images/icon.png",
+      "src": "/images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
