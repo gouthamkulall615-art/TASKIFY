@@ -150,7 +150,7 @@ section .task-column .task{
    display: flex;
    flex-direction:column;
    cursor: grab;
-   gap: var(--padding-s);
+  gap: 10px;
 
 
 }
@@ -226,6 +226,11 @@ color: #FFFFFF;
 }
 .dragging{
     opacity: 0.5;
+}
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 @media (max-width:768px){
