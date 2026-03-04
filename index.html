@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List App</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="images/png" href="images/icon.png">
+    <link rel="icon" type="image/png" href="images/icon.png">
 </head>
 <body>
     <main>
@@ -19,6 +19,7 @@
                     <div class="left">To Do</div>
                     <div class="right">Count</div>
                     </div>
+                    <div class="task-list"></div>
                   
                 </div>
             </div>
@@ -27,6 +28,7 @@
                     <div class="left">In Progress</div>
                     <div class="right">Count</div>
                     </div>
+                      <div class="task-list"></div>
                 </div>
             </div>
                 <div id="done" class="task-column">
@@ -34,6 +36,7 @@
                     <div class="left">Done</div>
                     <div class="right">Count</div>
                     </div>
+                      <div class="task-list"></div>
                 </div>
             </div>
           </section>
@@ -48,6 +51,7 @@
         <button class="add-task-btn" id="add-new-task">Add Task</button>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

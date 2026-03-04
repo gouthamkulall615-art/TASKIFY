@@ -1,14 +1,15 @@
 const todo = document.querySelector('#todo')
 const progress = document.querySelector('#progress')
 const done = document.querySelector('#done')
-const columns = [todo, progress, done]
+const columns =document.querySelectorAll('.task-list')
 
-let dragElement = null
+// let dragElement = null   //  Old drag system
 
 function updateCounts() {
-    columns.forEach(col => {
+ document.querySelectorAll('.task-column').forEach(col => {
         const count = col.querySelector('.heading .right')
-        count.innerText = col.querySelectorAll('.task').length
+        const tasks=col.querySelectorAll('.task').length
+        count.innerText =tasks
     })
 }
 
@@ -29,7 +30,8 @@ function saveToLocalStorage() {
 function createTask(title, desc) {
     const div = document.createElement('div')
     div.classList.add('task')
-    div.setAttribute('draggable', 'true')
+
+    // div.setAttribute('draggable', 'true')  //  Old system
 
     div.innerHTML = `
         <h2>${title}</h2>
@@ -37,9 +39,12 @@ function createTask(title, desc) {
         <button>Delete</button>
     `
 
+    //  Old dragstart
+    /*
     div.addEventListener('dragstart', () => {
         dragElement = div
     })
+    */
 
     div.querySelector('button').addEventListener('click', () => {
         div.remove()
@@ -50,6 +55,7 @@ function createTask(title, desc) {
     return div
 }
 
+/* Old Drag Events
 function addDragEvents(column) {
     column.addEventListener('dragenter', e => {
         e.preventDefault()
@@ -75,6 +81,20 @@ function addDragEvents(column) {
 }
 
 columns.forEach(addDragEvents)
+*/
+
+// NEW — SortableJS for Mobile + Desktop
+columns.forEach(column => {
+    new Sortable(column, {
+        group: 'shared',
+        animation: 150,
+        ghostClass: 'dragging',
+        onEnd: () => {
+            updateCounts()
+            saveToLocalStorage()
+        }
+    })
+})
 
 if (localStorage.getItem('tasks')) {
     const data = JSON.parse(localStorage.getItem('tasks'))
@@ -93,8 +113,8 @@ const modal = document.querySelector('.modal')
 const addTaskBtn = document.querySelector('#add-new-task')
 
 toggleModalBtn.addEventListener('click', () => {
-    document.querySelector('#task-title-input').value="";
-    document.querySelector('#task-desc-input').value="";
+    document.querySelector('#task-title-input').value = ""
+    document.querySelector('#task-desc-input').value = ""
     modal.classList.toggle('active')
 })
 
@@ -105,18 +125,18 @@ modalBg.addEventListener('click', () => {
 addTaskBtn.addEventListener('click', () => {
     const titleInput = document.querySelector('#task-title-input')
     const descInput = document.querySelector('#task-desc-input')
-    const title=titleInput.value;
-    const desc=descInput.value;
-
+    const title = titleInput.value
+    const desc = descInput.value
 
     if (!title.trim()) return
 
-    todo.appendChild(createTask(title, desc))
+   document.querySelector('#todo .task-list')
+   .appendChild(createTask(title,desc))
     updateCounts()
     saveToLocalStorage()
 
-    titleInput.value="";
-    descInput.value="";
+    titleInput.value = ""
+    descInput.value = ""
     modal.classList.remove('active')
 })
 

@@ -224,3 +224,25 @@ color: #FFFFFF;
     cursor: pointer;
 
 }
+.dragging{
+    opacity: 0.5;
+}
+
+@media (max-width:768px){
+    section{
+        flex-direction: column;
+        padding: 10px;
+    }
+    .task-column{
+        width: 100%;
+    }
+    nav{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .modal .center{
+        width: 90%;
+        height: auto;
+    }
+}
