@@ -335,28 +335,44 @@ section .task-column .task button:active {
 }
 
 /* ==========================================================================
-   6. DRAG & DROP STATES
+   6. DRAG & DROP STATES (SMOOTH SORTING)
    ========================================================================== */
 
-/* While Dragging: active card */
-.task.dragging,
-.sortable-drag {
-  transform: scale(1.05) rotate(3deg) !important;
+/* Touch-action and smooth pointer handling */
+section .task-column .task {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: transform, box-shadow;
+}
+
+/* While Dragging: active lifted card */
+.sortable-drag,
+.task.dragging:not(.sortable-ghost) {
+  transform: scale(1.04) rotate(2deg) !important;
   background-color: var(--pink-l) !important;
   box-shadow: var(--shadow-column) !important;
   cursor: grabbing !important;
-  z-index: 999;
+  z-index: 9999 !important;
   opacity: 1 !important;
+  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Card selected before move */
+.sortable-chosen {
+  cursor: grabbing !important;
 }
 
 /* Original Slot Left Behind */
 .sortable-ghost,
 .task-list .dragging {
-  opacity: 0.4 !important;
+  opacity: 0.35 !important;
   background-color: transparent !important;
   border: 2.5px dashed var(--ink) !important;
   box-shadow: none !important;
   transform: none !important;
+  transition: none !important;
 }
 
 #done .sortable-ghost,
@@ -370,7 +386,7 @@ section .task-column.drag-over {
   border-style: dashed;
   background-color: var(--blush) !important;
   color: var(--ink) !important;
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 section .task-column.hover-over .heading .left,
@@ -506,11 +522,13 @@ section .task-column.drag-over .heading .left {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE DESIGN
+   9. RESPONSIVE DESIGN (VERTICAL STACK ON MOBILE)
    ========================================================================== */
 @media (max-width: 768px) {
   body nav {
     padding: 16px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   nav .left,
@@ -520,19 +538,22 @@ section .task-column.drag-over .heading .left {
 
   section,
   section.board {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding: 20px 16px 28px;
-    gap: 16px;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+    -webkit-overflow-scrolling: auto !important;
+    padding: 20px 16px 40px !important;
+    gap: 24px !important;
+    width: 100% !important;
   }
 
   section .task-column {
-    flex: 0 0 85vw;
-    scroll-snap-align: center;
-    touch-action: pan-y;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+    min-width: 0 !important;
+    scroll-snap-align: none !important;
   }
 
   .modal .center {

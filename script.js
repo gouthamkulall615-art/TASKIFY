@@ -59,14 +59,24 @@ function createTask(title, desc) {
     return div
 }
 
-// SortableJS
+// SortableJS with smooth animation & mobile touch handling
 columns.forEach(col => {
     const list = col.querySelector('.task-list')
 
     new Sortable(list, {
         group: 'shared',
-        animation: 150,
+        animation: 200,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
         ghostClass: 'dragging',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        delay: 50,
+        delayOnTouchOnly: true,
+        touchStartThreshold: 5,
+        fallbackTolerance: 3,
+        swapThreshold: 0.65,
+        invertSwap: true,
+        emptyInsertThreshold: 20,
         onEnd: () => {
             updateCounts()
             saveToLocalStorage()
