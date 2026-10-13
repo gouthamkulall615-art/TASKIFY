@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskify - App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+</head>
+<body>
+    <main>
+        <nav>
+          <a href="index.html" class="left logo" style="text-decoration: none;">TASKIFY</a>
+          <div class="right"><button class="add-task-btn" id="toggle-modal">Add New Task</button></div>
+        </nav>
+          <section class="board">
+            <div id="todo" class="task-column">
+                <div class="heading">
+                    <div class="left">To Do</div>
+                    <div class="right">Count</div>
+                </div>
+                <div class="task-list"></div>
+            </div>
+            <div id="progress" class="task-column">
+                <div class="heading">
+                    <div class="left">In Progress</div>
+                    <div class="right">Count</div>
+                </div>
+                <div class="task-list"></div>
+            </div>
+            <div id="done" class="task-column">
+                <div class="heading">
+                    <div class="left">Done</div>
+                    <div class="right">Count</div>
+                </div>
+                <div class="task-list"></div>
+            </div>
+          </section>
+    </main>
+    <div class="modal add-new-task">
+        <div class="bg"></div>
+        <div class="center">
+            <input type="text" name="" id="task-title-input" placeholder="Task Title">
+            <textarea name="" id="task-desc-input" placeholder="Task Description"></textarea>
+            <button class="add-task-btn" id="add-new-task">Add Task</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

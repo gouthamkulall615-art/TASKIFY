@@ -2,6 +2,7 @@ const CACHE_NAME = "taskify-v1";
 const urlsToCache = [
   "/",
   "/index.html",
+  "/app.html",
   "/style.css",
   "/script.js",
   "/images/icon.png"
