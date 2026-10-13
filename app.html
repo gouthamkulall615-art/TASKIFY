@@ -3,41 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taskify - App</title>
+    <title>Taskify - Kanban Board</title>
     <link rel="stylesheet" href="style.css?v=2">
     <link rel="icon" type="image/png" href="images/icon.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#FAF3FB">
 </head>
 <body>
     <main>
         <nav>
-          <a href="index.html" class="left logo" style="text-decoration: none;">TASKIFY</a>
-          <div class="right"><button class="add-task-btn" id="toggle-modal">Add New Task</button></div>
+          <a href="landing.html" class="left logo" style="text-decoration: none;">TASKIFY</a>
+          <div class="right">
+            <button class="install-btn" id="install-app-btn" style="display: none;">📲 Install App</button>
+            <button class="add-task-btn" id="toggle-modal">Add New Task</button>
+          </div>
         </nav>
-          <section class="board">
+        <section class="board">
             <div id="todo" class="task-column">
                 <div class="heading">
                     <div class="left">To Do</div>
-                    <div class="right">Count</div>
+                    <div class="right">0</div>
                 </div>
                 <div class="task-list"></div>
             </div>
             <div id="progress" class="task-column">
                 <div class="heading">
                     <div class="left">In Progress</div>
-                    <div class="right">Count</div>
+                    <div class="right">0</div>
                 </div>
                 <div class="task-list"></div>
             </div>
             <div id="done" class="task-column">
                 <div class="heading">
                     <div class="left">Done</div>
-                    <div class="right">Count</div>
+                    <div class="right">0</div>
                 </div>
                 <div class="task-list"></div>
             </div>
-          </section>
+        </section>
     </main>
     <div class="modal add-new-task">
         <div class="bg"></div>
@@ -45,6 +48,20 @@
             <input type="text" name="" id="task-title-input" placeholder="Task Title">
             <textarea name="" id="task-desc-input" placeholder="Task Description"></textarea>
             <button class="add-task-btn" id="add-new-task">Add Task</button>
+        </div>
+    </div>
+    <!-- PWA Install Prompt Notification Banner -->
+    <div id="install-banner" class="install-banner" style="display: none;">
+        <div class="banner-content">
+            <div class="banner-icon">📲</div>
+            <div class="banner-text">
+                <strong>Install Taskify</strong>
+                <p id="install-banner-desc">Add to home screen for instant access & offline use.</p>
+            </div>
+        </div>
+        <div class="banner-actions">
+            <button id="banner-install-btn" class="banner-btn-install">Install</button>
+            <button id="banner-close-btn" class="banner-btn-close" aria-label="Dismiss">✕</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>

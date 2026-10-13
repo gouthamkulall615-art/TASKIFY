@@ -128,6 +128,46 @@ nav .right .add-task-btn,
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
+nav .right {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Install Header Button */
+nav .right .install-btn,
+.install-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--pink);
+  color: var(--ink);
+  border: var(--border-thick);
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-family: 'Bricolage Grotesque', 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: -0.03em;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+nav .right .install-btn:hover,
+.install-btn:hover {
+  background-color: var(--pink-l);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+nav .right .install-btn:active,
+.install-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
 nav .right .add-task-btn:hover,
 .add-task-btn:hover {
   background-color: var(--purple-d);
@@ -139,6 +179,129 @@ nav .right .add-task-btn:active,
 .add-task-btn:active {
   transform: translate(4px, 4px);
   box-shadow: 0 0 0 var(--ink);
+}
+
+/* ==========================================================================
+   PWA INSTALL BANNER / NOTIFICATION
+   ========================================================================== */
+.install-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 500px;
+  background-color: var(--white);
+  border: var(--border-modal);
+  border-radius: 20px;
+  box-shadow: var(--shadow-column);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  z-index: 9999;
+  animation: bannerSlideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bannerSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.install-banner .banner-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.install-banner .banner-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.install-banner .banner-text {
+  min-width: 0;
+}
+
+.install-banner .banner-text strong {
+  display: block;
+  font-family: 'Bricolage Grotesque', 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.install-banner .banner-text p {
+  font-size: 0.85rem;
+  color: #5A356E;
+  margin: 2px 0 0;
+  line-height: 1.35;
+}
+
+.install-banner .banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.install-banner .banner-btn-install {
+  background-color: var(--purple);
+  color: var(--white);
+  border: var(--border-thick);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: 'Bricolage Grotesque', 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.install-banner .banner-btn-install:hover {
+  background-color: var(--purple-d);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.install-banner .banner-btn-install:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.install-banner .banner-btn-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background-color: var(--bg);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease;
+}
+
+.install-banner .banner-btn-close:hover {
+  background-color: var(--pink-l);
+  transform: scale(1.05);
 }
 
 /* ==========================================================================

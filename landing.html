@@ -6,7 +6,7 @@
   <title>Taskify - Drag your day into order</title>
   <meta name="description" content="Taskify is a simple to-do app built around drag and drop. Reorder your list with one motion, and install it on your phone like any other app.">
   <link rel="icon" type="image/png" href="images/icon.png">
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#FAF3FB">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -444,7 +444,7 @@
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
           .then(() => console.log('Service Worker Registered'))
           .catch(err => console.log('SW registration failed', err));
       });
