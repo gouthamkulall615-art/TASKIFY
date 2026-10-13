@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskify - Drag your day into order</title>
+  <meta name="description" content="Taskify is a simple to-do app built around drag and drop. Reorder your list with one motion, and install it on your phone like any other app.">
+  <link rel="icon" type="image/png" href="images/icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#FAF3FB">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF3FB;
+      --ink: #2A1038;
+      --purple: #6B3FA0;
+      --purple-d: #4C2A7A;
+      --pink: #F27FB5;
+      --pink-l: #FBD3E6;
+      --lilac: #E4D4F6;
+      --blush: #FDE8F1;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Figtree', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    .disp {
+      font-family: 'Bricolage Grotesque', 'Figtree', sans-serif;
+      font-weight: 800;
+      letter-spacing: -.035em;
+      line-height: 1;
+    }
+    .wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .85rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: .95rem;
+      text-decoration: none;
+      border: 2px solid var(--ink);
+      transition: background .15s, color .15s;
+      cursor: pointer;
+    }
+    .btn-purple {
+      background: var(--purple);
+      color: #fff;
+      border-color: var(--purple);
+    }
+    .btn-purple:hover {
+      background: var(--purple-d);
+      border-color: var(--purple-d);
+    }
+    .btn-pink {
+      background: var(--pink);
+      color: var(--ink);
+    }
+    .btn-pink:hover {
+      background: var(--ink);
+      color: var(--pink);
+    }
+    .btn-line {
+      background: transparent;
+      color: var(--ink);
+    }
+    .btn-line:hover {
+      background: var(--lilac);
+    }
+    .tile {
+      border-radius: 2rem;
+      padding: 2rem;
+      overflow: hidden;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+    :focus-visible {
+      outline: 3px solid var(--purple);
+      outline-offset: 3px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* Layout & Tailwind-compatible utilities */
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .flex-col { flex-direction: column; }
+    .flex-row { flex-direction: row; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; }
+    .items-baseline { align-items: baseline; }
+    .justify-between { justify-content: space-between; }
+    .self-start { align-self: flex-start; }
+
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-8 { gap: 2rem; }
+    .gap-9 { gap: 2.25rem; }
+    .gap-10 { gap: 2.5rem; }
+
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mt-7 { margin-top: 1.75rem; }
+    .mt-8 { margin-top: 2rem; }
+    .mt-9 { margin-top: 2.25rem; }
+    .mt-10 { margin-top: 2.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+
+    .hidden { display: none; }
+
+    @media (min-width: 640px) {
+      .sm\:flex-row { flex-direction: row; }
+    }
+
+    @media (min-width: 768px) {
+      .md\:flex { display: flex; }
+      .md\:flex-row { flex-direction: row; }
+      .md\:items-center { align-items: center; }
+      .md\:self-auto { align-self: auto; }
+      .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lg\:grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .lg\:col-span-4 { grid-column: span 4 / span 4; }
+      .lg\:col-span-2 { grid-column: span 2 / span 2; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="position: sticky; top: 0; z-index: 20; background: var(--bg);">
+    <nav aria-label="Main" class="wrap flex items-center justify-between" style="height: 76px;">
+      <a href="#top" class="flex items-center gap-3" style="text-decoration: none;">
+        <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="9" fill="#6B3FA0" />
+          <polyline points="9.4,16.6 14,21.2 22.8,11.6" fill="none" stroke="#FBD3E6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="disp" style="font-size: 1.6rem;">Taskify</span>
+      </a>
+      <ul class="hidden md:flex gap-9" style="list-style: none; margin: 0; padding: 0; font-weight: 500;">
+        <li><a href="#features" style="text-decoration: none;">Features</a></li>
+        <li><a href="#install" style="text-decoration: none;">Install</a></li>
+      </ul>
+      <a href="./index.html" class="btn btn-purple app-launch-link" style="padding: .6rem 1.2rem;">Launch App</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="top" class="wrap grid grid-cols-1 lg:grid-cols-2 gap-10 items-center" style="padding-top: 2rem; padding-bottom: 5rem;">
+      <div>
+        <span style="display: inline-block; background: var(--pink-l); border-radius: 99px; padding: .4rem 1rem; font-size: .85rem; font-weight: 600;">
+          A to-do app for your phone
+        </span>
+        <h1 class="disp mt-6" style="font-size: clamp(3.25rem, 8vw, 6rem);">
+          Drag your day into <span style="color: var(--purple);">order.</span>
+        </h1>
+        <p class="mt-7" style="font-size: 1.2rem; line-height: 1.6; max-width: 34rem;">
+          Taskify is a simple to-do app built around drag and drop. Reorder your list with one motion, and install it on your phone like any other app.
+        </p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href="./index.html" class="btn btn-purple app-launch-link">
+            Launch App
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+          <a href="#install" class="btn btn-line">How to install</a>
+        </div>
+      </div>
+      <div style="background: var(--lilac); border-radius: 2.5rem; padding: 3rem 1rem;">
+        <!-- Phone Mockup -->
+        <div role="img" aria-label="Taskify running on a phone" style="width: 290px; margin: 0 auto; border: 10px solid var(--ink); border-radius: 2.75rem; background: var(--bg); padding: 1.5rem 1rem 1rem;">
+          <div style="width: 70px; height: 8px; background: var(--ink); border-radius: 99px; margin: 0 auto 1.25rem;"></div>
+          <div class="flex items-baseline justify-between px-1 mb-4">
+            <p class="disp" style="font-size: 1.6rem; margin: 0;">Today</p>
+            <p style="font-size: .8rem; font-weight: 600; color: var(--purple); margin: 0;">1 of 5 done</p>
+          </div>
+          <ul id="phone-task-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .65rem;">
+            <!-- Populated via script -->
+          </ul>
+          <div class="flex items-center justify-between mt-4" style="background: var(--white); border-radius: 999px; padding: .4rem .4rem .4rem 1rem; font-size: .85rem; color: #8B7699;">
+            Add a task
+            <span class="flex items-center justify-center" style="width: 32px; height: 32px; border-radius: 99px; background: var(--purple); color: #fff;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="wrap" style="padding-bottom: 5rem;">
+      <div class="reveal">
+        <h2 class="disp" style="font-size: clamp(2.25rem, 5vw, 3.75rem); max-width: 16ch;">Everything you need, nothing you don't.</h2>
+        <div class="mt-10 grid grid-cols-1 lg:grid-cols-6 gap-4">
+          <article class="tile lg:col-span-4" style="background: var(--purple); color: #fff;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="8 18 12 22 16 18"/><polyline points="8 6 12 2 16 6"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
+            <h3 class="disp mt-4" style="font-size: 2rem;">Drag and drop</h3>
+            <p class="mt-3" style="line-height: 1.6; max-width: 30rem; color: #EADCF7;">Pick a task up and drop it where it belongs. Reordering takes one motion, on desktop or on your phone.</p>
+            <div class="mt-8 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E4D4F6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                <div style="height: 16px; width: 80%; border-radius: 99px; background: rgba(255,255,255,.28);"></div>
+              </div>
+              <div class="flex items-center gap-2" style="transform: translateX(18px);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2A1038" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                <div style="height: 16px; width: 62%; border-radius: 99px; background: var(--pink);"></div>
+              </div>
+              <div class="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E4D4F6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+                <div style="height: 16px; width: 70%; border-radius: 99px; background: rgba(255,255,255,.28);"></div>
+              </div>
+            </div>
+          </article>
+          <article class="tile lg:col-span-2" style="background: var(--pink);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            <h3 class="disp mt-4" style="font-size: 2rem;">Install it</h3>
+            <p class="mt-3" style="line-height: 1.6;">Add Taskify to your home screen and open it like any other app.</p>
+            <div class="mt-6">
+              <svg width="64" height="64" viewBox="0 0 32 32" aria-hidden="true">
+                <rect width="32" height="32" rx="9" fill="#6B3FA0" />
+                <polyline points="9.4,16.6 14,21.2 22.8,11.6" fill="none" stroke="#FBD3E6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </article>
+          <article class="tile lg:col-span-2" style="background: var(--lilac);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
+            <h3 class="disp mt-4" style="font-size: 2rem;">Simple by design</h3>
+            <p class="mt-3" style="line-height: 1.6;">Add a task, check it off, move it around. Nothing else gets in the way.</p>
+          </article>
+          <article class="tile lg:col-span-4" style="background: var(--blush); border: 2px solid var(--pink-l);">
+            <h3 class="disp" style="font-size: 2rem;">Plain HTML, CSS and JavaScript</h3>
+            <p class="mt-3" style="line-height: 1.6; max-width: 30rem;">No framework behind it. Small, quick to load and easy to read.</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <span style="background: var(--white); border: 2px solid var(--ink); border-radius: 99px; padding: .45rem 1.1rem; font-weight: 600;">HTML</span>
+              <span style="background: var(--white); border: 2px solid var(--ink); border-radius: 99px; padding: .45rem 1.1rem; font-weight: 600;">CSS</span>
+              <span style="background: var(--white); border: 2px solid var(--ink); border-radius: 99px; padding: .45rem 1.1rem; font-weight: 600;">JavaScript</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Install Section -->
+    <section id="install" style="background: var(--lilac); border-radius: 3rem 3rem 0 0;">
+      <div class="reveal wrap">
+        <div style="padding: 5rem 0;">
+          <h2 class="disp" style="font-size: clamp(2.25rem, 5vw, 3.75rem); max-width: 16ch;">Put it on your home screen.</h2>
+          <div class="mt-8 inline-flex" role="tablist" style="background: var(--white); border-radius: 99px; padding: 4px;">
+            <button role="tab" id="tab-android" data-os-tab="Android" aria-selected="true"
+              style="border: 0; cursor: pointer; font-family: inherit; font-weight: 600; font-size: .95rem; padding: .6rem 1.4rem; border-radius: 99px; background: var(--purple); color: #fff; transition: background .15s, color .15s;">
+              Android
+            </button>
+            <button role="tab" id="tab-iphone" data-os-tab="iPhone" aria-selected="false"
+              style="border: 0; cursor: pointer; font-family: inherit; font-weight: 600; font-size: .95rem; padding: .6rem 1.4rem; border-radius: 99px; background: transparent; color: var(--ink); transition: background .15s, color .15s;">
+              iPhone
+            </button>
+          </div>
+          <ol id="install-steps" class="grid grid-cols-1 md:grid-cols-3 gap-4" style="list-style: none; margin: 0; padding: 0; margin-top: 2rem;">
+            <!-- Rendered via JS -->
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section style="background: var(--lilac);">
+      <div class="wrap" style="padding-bottom: 5rem;">
+        <div class="reveal">
+          <div class="tile flex flex-col md:flex-row md:items-center justify-between gap-8" style="background: var(--purple-d); color: #fff; padding: 3.5rem 2.5rem;">
+            <h2 class="disp" style="font-size: clamp(2.5rem, 6vw, 4.25rem); max-width: 12ch;">Your list, in your order.</h2>
+            <a href="./index.html" class="btn btn-pink self-start md:self-auto app-launch-link" style="padding: 1.1rem 2rem; font-size: 1.05rem; border-color: var(--pink);">
+              Launch App
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--ink); color: var(--blush);">
+    <div class="wrap flex flex-col sm:flex-row gap-4 justify-between items-center" style="padding: 1.75rem 1.25rem; font-size: .9rem;">
+      <span class="flex items-center gap-2">
+        <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="9" fill="#6B3FA0" />
+          <polyline points="9.4,16.6 14,21.2 22.8,11.6" fill="none" stroke="#FBD3E6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Taskify © <span id="current-year"></span>
+      </span>
+      <span>Built with HTML, CSS and JavaScript</span>
+      <a href="https://github.com/your-username/taskify" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2" style="text-decoration: none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        GitHub
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Configuration
+    const APP_URL = './index.html';
+    const GITHUB_URL = 'https://github.com/your-username/taskify';
+
+    // Year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Data
+    const TASKS = [
+      { id: 1, t: 'Finish the lab report', done: true },
+      { id: 2, t: 'Review pull requests', done: false },
+      { id: 3, t: 'Buy groceries', done: false },
+      { id: 4, t: 'Practice 2 problems', done: false },
+      { id: 5, t: 'Plan the week', done: false },
+    ];
+
+    const INSTALL = {
+      Android: ['Open Taskify in Chrome.', 'Tap the menu, then Install app.', 'Open it from your home screen.'],
+      iPhone: ['Open Taskify in Safari.', 'Tap Share, then Add to Home Screen.', 'Open it from your home screen.'],
+    };
+
+    // Update App links
+    document.querySelectorAll('.app-launch-link').forEach(link => {
+      link.href = APP_URL;
+    });
+
+    // Interactive Phone Animation
+    const phoneState = {
+      order: TASKS.map(x => x.id),
+      lift: null
+    };
+
+    function renderPhone() {
+      const listEl = document.getElementById('phone-task-list');
+      if (!listEl) return;
+      listEl.innerHTML = phoneState.order.map(id => {
+        const t = TASKS.find(x => x.id === id);
+        const up = phoneState.lift === id;
+        return `
+          <li class="flex items-center gap-3"
+              style="background: ${up ? 'var(--pink-l)' : 'var(--white)'}; border-radius: 1rem; padding: .8rem .75rem; font-size: .9rem; border: 2px solid ${up ? 'var(--pink)' : 'transparent'}; transform: ${up ? 'scale(1.04) rotate(-1.5deg)' : 'none'}; transition: transform .2s, background .2s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9A7BB8" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;">
+              <circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/>
+              <circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/>
+            </svg>
+            <span class="flex items-center justify-center" style="width: 20px; height: 20px; border-radius: 7px; flex-shrink: 0; background: ${t.done ? 'var(--purple)' : 'transparent'}; border: 2px solid var(--purple); color: #fff;">
+              ${t.done ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+            </span>
+            <span style="text-decoration: ${t.done ? 'line-through' : 'none'}; opacity: ${t.done ? 0.5 : 1};">${t.t}</span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    renderPhone();
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let dropTimeout;
+      setInterval(() => {
+        phoneState.lift = phoneState.order[3];
+        renderPhone();
+        dropTimeout = setTimeout(() => {
+          if (phoneState.lift !== null) {
+            phoneState.order = [phoneState.lift, ...phoneState.order.filter(x => x !== phoneState.lift)];
+            phoneState.lift = null;
+            renderPhone();
+          }
+        }, 1000);
+      }, 3200);
+    }
+
+    // Install Tabs logic
+    let currentOs = 'Android';
+    function renderInstall() {
+      const stepsEl = document.getElementById('install-steps');
+      if (!stepsEl) return;
+      stepsEl.innerHTML = INSTALL[currentOs].map((step, i) => `
+        <li style="background: var(--white); border-radius: 1.75rem; padding: 1.75rem;">
+          <span class="disp" style="font-size: 3.5rem; color: var(--pink); line-height: 1; display: block;">${i + 1}</span>
+          <p class="mt-3" style="font-size: 1.05rem; line-height: 1.5; margin: 0.75rem 0 0;">${step}</p>
+        </li>
+      `).join('');
+
+      document.querySelectorAll('[data-os-tab]').forEach(btn => {
+        const isSelected = btn.dataset.osTab === currentOs;
+        btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        btn.style.background = isSelected ? 'var(--purple)' : 'transparent';
+        btn.style.color = isSelected ? '#fff' : 'var(--ink)';
+      });
+    }
+
+    document.querySelectorAll('[data-os-tab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentOs = btn.dataset.osTab;
+        renderInstall();
+      });
+    });
+
+    renderInstall();
+
+    // Reveal on scroll (IntersectionObserver)
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => io.observe(el));
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('Service Worker Registered'))
+          .catch(err => console.log('SW registration failed', err));
+      });
+    }
+  </script>
+</body>
+</html>
